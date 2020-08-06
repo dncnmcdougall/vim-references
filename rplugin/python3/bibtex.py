@@ -89,7 +89,7 @@ class bibtex(object):
                 'library' : self.vim.eval('g:references#library')
                 }
 
-    @pynvim.command("ListBibTexLibrary", sync=True)
+    @pynvim.function("ListBibTexLibrary", sync=True)
     def listBibTexLibrary(self, args):
         citations = []
         current_citation = None
@@ -122,9 +122,12 @@ class bibtex(object):
         buffer_line = args[0]
         reference = buffer_line.split()[0]
         curr_line = self.vim.current.line
-        pos = self.vim.call('getpos','.')
+        pos = self.vim.call('getcurpos')
         col = pos[2]
         curr_line = curr_line[0:col] + reference + curr_line[col:]
         self.vim.current.line = curr_line
+        pos[2] += len(reference)
+        pos[4] += len(reference)
+        self.vim.call('setpos', '.', pos)
 
 

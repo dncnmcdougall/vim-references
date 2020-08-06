@@ -12,6 +12,19 @@ if !exists('g:references#fzf')
 endif
 
 if g:references#fzf
-    command! -nargs=0 References call fzf#run(fzf#wrap('references',{"source": ListBibTexLibrary(), 'sink':function('InsertReferenceAtCursor') }))
+
+    function! s:fzfSink(line)
+        call InsertReferenceAtCursor(a:line)
+    endfunction
+
+    function! s:fzfSource()
+        let l:list = ListBibTexLibrary()
+        if empty(l:list)
+            let l:list = ListBibTexLibrary()
+        endif
+        return l:list
+    endfunction
+
+    command! -nargs=0 References call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfSink') }))
 endif
 
