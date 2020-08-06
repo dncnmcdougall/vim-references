@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-from typing import List
 import os
 
 import pynvim
@@ -85,13 +84,19 @@ class bibtex(object):
         self.vim.out_write(str(args))
         self.vim.out_write('\n')
 
-    @pynvim.function("ProcessBibTexLibrary", sync=True)
-    def processBibTexLibrary(lib: str) -> List[str]:
+    def _getSettings(self):
+        return { 
+                'library' : self.vim.eval('g:references#library')
+                }
+
+    @pynvim.command("ListBibTexLibrary", sync=True)
+    def listBibTexLibrary(self, args):
         citations = []
         current_citation = None
         citation_text = None
         open_b_count = 0
-        with open(os.path.expanduser(args.lib),'r') as lib:
+        lib = self._getSettings()['library']
+        with open(os.path.expanduser(lib),'r') as lib:
             for line in lib:
                 line = line.strip()
                 if len(line) == 0:
@@ -109,5 +114,17 @@ class bibtex(object):
                     citation_text = None
                     values['title'] = values['title'][1:-1]
                     author = values['author'] if 'author' in values else ''
-                    citations.append((cite, values['title'], author))
+                    citations.append('%s\t%s\t%s' % (cite, values['title'], author))
         return citations
+
+    @pynvim.function("InsertReferenceAtCursor", sync=True)
+    def insertReferenceAtCursor(self, args):
+        buffer_line = args[0]
+        reference = buffer_line.split()[0]
+        curr_line = self.vim.current.line
+        pos = self.vim.call('getpos','.')
+        col = pos[2]
+        curr_line = curr_line[0:col] + reference + curr_line[col:]
+        self.vim.current.line = curr_line
+
+
