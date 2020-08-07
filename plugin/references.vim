@@ -13,8 +13,16 @@ endif
 
 if g:references#fzf
 
-    function! s:fzfSink(line)
-        call InsertReferenceAtCursor(a:line)
+    function! s:fzfCiteSink(line)
+        call InsertReferenceAtCursor(a:line, v:false, v:false)
+    endfunction
+
+    function! s:fzfCiteTitleSink(line)
+        call InsertReferenceAtCursor(a:line, v:true, v:false)
+    endfunction
+
+    function! s:fzfCiteTitleAuthorSink(line)
+        call InsertReferenceAtCursor(a:line, v:true, v:true)
     endfunction
 
     function! s:fzfSource()
@@ -25,6 +33,9 @@ if g:references#fzf
         return l:list
     endfunction
 
-    command! -nargs=0 References call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfSink') }))
+    command! -nargs=0 Cite call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfCiteSink') }))
+    command! -nargs=0 TCite call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfCiteTitleSink') }))
+    command! -nargs=0 TACite call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfCiteTitleAuthorSink') }))
+    command! -nargs=0 Reference call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfCiteTitleAuthorSink') }))
 endif
 

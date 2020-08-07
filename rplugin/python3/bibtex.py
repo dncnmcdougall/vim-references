@@ -120,7 +120,15 @@ class bibtex(object):
     @pynvim.function("InsertReferenceAtCursor", sync=True)
     def insertReferenceAtCursor(self, args):
         buffer_line = args[0]
-        reference = buffer_line.split()[0]
+        title = args[1]
+        author = args[2]
+        parts = buffer_line.split('\t')
+        reference = parts[0]
+        if title: 
+            reference += ': ' + '\t'.join(parts[1:-1])
+        if author:
+            reference += ' -- ' + parts[-1]
+
         curr_line = self.vim.current.line
         pos = self.vim.call('getcurpos')
         col = pos[2]
