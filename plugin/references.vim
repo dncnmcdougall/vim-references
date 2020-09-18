@@ -38,4 +38,5 @@ if g:references#fzf
     command! -nargs=0 TACite call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfCiteTitleAuthorSink') }))
     command! -nargs=0 Reference call fzf#run(fzf#wrap('references',{"source": s:fzfSource(), 'sink':funcref('s:fzfCiteTitleAuthorSink') }))
 endif
+" TODO else
 
