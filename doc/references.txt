@@ -1,0 +1,77 @@
+*references.txt* A simple plugin for inserting citations from a BibTex.
+file.
+
+Author: Duncan McDougall
+
+Type |gO| to see the table of contents.
+===============================================================================
+OVERVIEW                                                          *references*
+
+This is a simple plugin that parses a BibTex file and allows you to search it
+and insert a citation into the current file in various ways.
+
+You specify a BibTex file to parse then search it by calling `:Cite` ot one of
+the other commands.
+
+===============================================================================
+REQUIREMENTS                                           *references-requirements*
+
+This plugin uses Python3, and neovim apis.
+Remember to :UpdateRemote plugins to use.
+
+
+===============================================================================
+COMMANDS                                                    *references-commands*
+
+                                                                         *:Cite*
+:Cite 
+    Open the citation search. Insert the citation key after the current cursor
+    position.
+
+                                                                    *:Reference*
+:Reference
+    Open the citation search. Insert the citation key, title and author after
+    the current cursor position.
+
+                                                                        *:TCite*
+:TCite 
+    Title cite
+    Open the citation search. Insert the citation key and title after the
+    current cursor position.
+
+                                                                       *:TACite*
+:TACite 
+    Title Author cite. This is the same as |:Reference|
+    Open the citation search. Insert the citation key, title and author after
+    the current cursor position.
+
+===============================================================================
+SETTINGS                                                   *references-settings*
+
+*g:references#library*
+g:references#library = '~/library.bib'
+    The BibTex file to parse.
+
+*g:references#fzf*
+g:references#fzf = 1
+    If set to 1 (default) then the plugin will populate a fzf search when
+    using any of the commands.
+    TODO: If set to 0, then nothing happens, and the commands are not defined.
+
+===============================================================================
+FUNCTIONS                                                 *references-functions*
+
+
+                                                           *ListBibTexLibrary()*
+ListBibTexLibrary()
+    Parses the BibTex file specified by |g:references#library| and returns a
+    list of the references. Each item in the list is one reference formated as
+    a single line of text.
+
+                                                     *InsertReferenceAtCursor()*
+InsertReferenceAtCursor({line}, {title}, {author})
+    Takes a reference {line} resulting from the list and inserts the citation
+    key, the title if {title} is true, and the author, if {author} is true.
+
+
+vim:ft=help
