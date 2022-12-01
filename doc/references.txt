@@ -54,9 +54,16 @@ g:references#library = '~/library.bib'
 
 *g:references#fzf*
 g:references#fzf = 1
-    If set to 1 (default) then the plugin will populate a fzf search when
+    If set to 1, then the plugin will populate a fzf search when
     using any of the commands.
-    TODO: If set to 0, then nothing happens, and the commands are not defined.
+    If set to 0 (default), then the fzf components will not be initialised.
+
+*g:references#telescope*
+g:references#telescope = 1
+    If set to 1 (default) then the plugin will populate a telescope picker when
+    using any of the commands.
+    If set to 0, then the telescope components will not be initialised. 
+
 
 ===============================================================================
 FUNCTIONS                                                 *references-functions*
@@ -66,12 +73,36 @@ FUNCTIONS                                                 *references-functions*
 ListBibTexLibrary()
     Parses the BibTex file specified by |g:references#library| and returns a
     list of the references. Each item in the list is one reference formated as
-    a single line of text.
+    a single line of text. This is a remote python function. Sometimes this
+    returns an empty list on its first call.
+
+                                                     *references#bibTexSource()*
+references#bibTexSource()
+    This is the same as ListBibTexLibrary(), except that it is a native
+    vimscrip function (rather than a python remote function.) This is wraps
+    ListBibTexLibrary() so as allow easier comversion with Lua, while trying
+    to avoid the odd empty return value bug.
 
                                                      *InsertReferenceAtCursor()*
 InsertReferenceAtCursor({line}, {title}, {author})
     Takes a reference {line} resulting from the list and inserts the citation
     key, the title if {title} is true, and the author, if {author} is true.
+
+===============================================================================
+LUA                                                           *references-lua*
+
+                                                              *lua_references*
+references
+    This is a lua module with one function: The telescope picker.
+
+                                                   *lua_references.picker*
+references.picker(opts, prompt, title, author)
+    This is a telescope picker function. 
+    Parameters:~
+        {opts} These options are passed down to telescope.
+        {prompt} This is the text to show on the prompt.
+        {title} If true the title is also inserted at the cursor position.
+        {author} If true the author is also inserted at the cursor position.
 
 
 vim:ft=help
