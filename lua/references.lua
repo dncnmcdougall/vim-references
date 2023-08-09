@@ -6,10 +6,10 @@ local action_state = require "telescope.actions.state"
 
 M = {}
 
-M.picker = function(opts, propmpt, title, author)
+M.picker = function(opts, prompt, title, author)
     opts = opts or {}
     pickers.new(opts, {
-        prompt_title = "Reference",
+        prompt_title = prompt,
         finder = finders.new_table {
             results = vim.fn['references#bibTexSource']()
         },
